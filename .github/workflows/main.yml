@@ -34,7 +34,7 @@ on:
         description: 'Target OS (目标系统)'
         required: true
         type: choice
-        default: 'both'
+        default: 'alioth'
         options:
           - aosp
           - miui
@@ -42,7 +42,7 @@ on:
 
 jobs:
   build-kernel:
-    name: Build ${{ github.event.inputs.device || 'elish' }} | ${{ github.event_name == 'push' && 'KSU' || (github.event.inputs.ksu == 'true' && 'KSU' || 'NoKSU') }}
+    name: Build ${{ github.event.inputs.device || 'alioth' }} | ${{ github.event_name == 'push' && 'KSU' || (github.event.inputs.ksu == 'true' && 'KSU' || 'NoKSU') }}
     runs-on: ubuntu-latest
 
     steps:
@@ -66,9 +66,9 @@ jobs:
         uses: actions/cache@v4
         with:
           path: ~/.cache/ccache_mikernel
-          key: ${{ runner.os }}-kernel-ccache-${{ github.event.inputs.device || 'elish' }}-${{ github.run_id }}
+          key: ${{ runner.os }}-kernel-ccache-${{ github.event.inputs.device || 'alioth' }}-${{ github.run_id }}
           restore-keys: |
-            ${{ runner.os }}-kernel-ccache-${{ github.event.inputs.device || 'elish' }}-
+            ${{ runner.os }}-kernel-ccache-${{ github.event.inputs.device || 'alioth' }}-
             ${{ runner.os }}-kernel-ccache-
 
       - name: Setup proton-clang Toolchain
@@ -92,7 +92,7 @@ jobs:
         run: |
           chmod +x build.sh
 
-          DEVICE="${{ github.event.inputs.device || 'elish' }}"
+          DEVICE="${{ github.event.inputs.device || 'alioth' }}"
           ARGS="$DEVICE"
 
           if [ "${{ github.event_name }}" = "push" ] || [ "${{ github.event_name }}" = "pull_request" ]; then
